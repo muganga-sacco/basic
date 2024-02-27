@@ -4,7 +4,7 @@ app_publisher = "ABIZEYIMANA Victor"
 app_description = "ERPNext Setup module modified"
 app_email = "svicky.shema@gmail.com "
 app_license = "mit"
-# required_apps = []
+required_apps = ["frappe"]
 
 # Includes in <head>
 # ------------------
