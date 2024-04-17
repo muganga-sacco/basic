@@ -5,3 +5,18 @@
 tags
 node_modules
 __pycache__
+
+basic/public/dist
+basic/public/node_modules
+basic/docs/current
+node_modules/
+dist/
+
+# build/
+.vscode
+.vs
+node_modules
+*debug.log
+basic/docs/current
+basic/public/frontend
+basic/www/basic.html

@@ -11,7 +11,7 @@ required_apps = ["frappe"]
 
 # include js, css files in header of desk.html
 # app_include_css = "/assets/basic/css/basic.css"
-# app_include_js = "/assets/basic/js/basic.js"
+app_include_js = "basic.bundle.js"
 
 # include js, css files in header of web template
 # web_include_css = "/assets/basic/css/basic.css"
@@ -226,4 +226,3 @@ required_apps = ["frappe"]
 # default_log_clearing_doctypes = {
 # 	"Logging DocType Name": 30  # days to retain logs
 # }
-
