@@ -13,9 +13,6 @@ from frappe.query_builder.functions import Concat, Locate, Sum
 from frappe.utils import nowdate, today, unique
 from pypika import Order
 
-import erpnext
-from erpnext.stock.get_item_details import _get_item_tax_template
-
 
 # searches for active employees
 @frappe.whitelist()
@@ -90,7 +87,7 @@ def lead_query(doctype, txt, searchfield, start, page_len, filters):
 @frappe.validate_and_sanitize_search_inputs
 def tax_account_query(doctype, txt, searchfield, start, page_len, filters):
 	doctype = "Account"
-	company_currency = erpnext.get_company_currency(filters.get("company"))
+	company_currency = 'RWF'
 
 	def get_accounts(with_account_type_filter):
 		account_type_condition = ""
@@ -555,7 +552,7 @@ def get_blanket_orders(doctype, txt, searchfield, start, page_len, filters):
 @frappe.whitelist()
 @frappe.validate_and_sanitize_search_inputs
 def get_income_account(doctype, txt, searchfield, start, page_len, filters):
-	from erpnext.controllers.queries import get_match_cond
+	from basic.controllers.queries import get_match_cond
 
 	# income account can be any Credit account,
 	# but can also be a Asset account with account_type='Income Account' in special circumstances.
@@ -584,62 +581,8 @@ def get_income_account(doctype, txt, searchfield, start, page_len, filters):
 
 @frappe.whitelist()
 @frappe.validate_and_sanitize_search_inputs
-def get_filtered_dimensions(doctype, txt, searchfield, start, page_len, filters, reference_doctype=None):
-	from erpnext.accounts.doctype.accounting_dimension_filter.accounting_dimension_filter import (
-		get_dimension_filter_map,
-	)
-
-	dimension_filters = get_dimension_filter_map()
-	dimension_filters = dimension_filters.get((filters.get("dimension"), filters.get("account")))
-	query_filters = []
-	or_filters = []
-	fields = ["name"]
-
-	searchfields = frappe.get_meta(doctype).get_search_fields()
-
-	meta = frappe.get_meta(doctype)
-	if meta.is_tree and meta.has_field("is_group"):
-		query_filters.append(["is_group", "=", 0])
-
-	if meta.has_field("disabled"):
-		query_filters.append(["disabled", "!=", 1])
-
-	if meta.has_field("company"):
-		query_filters.append(["company", "=", filters.get("company")])
-
-	for field in searchfields:
-		or_filters.append([field, "LIKE", "%%%s%%" % txt])
-		fields.append(field)
-
-	if dimension_filters:
-		if dimension_filters["allow_or_restrict"] == "Allow":
-			query_selector = "in"
-		else:
-			query_selector = "not in"
-
-		if len(dimension_filters["allowed_dimensions"]) == 1:
-			dimensions = tuple(dimension_filters["allowed_dimensions"] * 2)
-		else:
-			dimensions = tuple(dimension_filters["allowed_dimensions"])
-
-		query_filters.append(["name", query_selector, dimensions])
-
-	output = frappe.get_list(
-		doctype,
-		fields=fields,
-		filters=query_filters,
-		or_filters=or_filters,
-		as_list=1,
-		reference_doctype=reference_doctype,
-	)
-
-	return [tuple(d) for d in set(output)]
-
-
-@frappe.whitelist()
-@frappe.validate_and_sanitize_search_inputs
 def get_expense_account(doctype, txt, searchfield, start, page_len, filters):
-	from erpnext.controllers.queries import get_match_cond
+	from basic.controllers.queries import get_match_cond
 
 	if not filters:
 		filters = {}
@@ -811,7 +754,7 @@ def get_tax_template(doctype, txt, searchfield, start, page_len, filters):
 			"company": company,
 		}
 
-		taxes = _get_item_tax_template(args, taxes, for_validate=True)
+		taxes = []
 		return [(d,) for d in set(taxes)]
 
 
