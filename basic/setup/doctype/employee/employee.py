@@ -79,12 +79,12 @@ class Employee(NestedSet):
     def update_nsm_model(self):
         frappe.utils.nestedset.update_nsm(self)
 
-    def on_update(self):
-        self.update_nsm_model()
-        if self.user_id:
-            self.update_user()
-            self.update_user_permissions()
-        self.reset_employee_emails_cache()
+    # def on_update(self):
+    #     self.update_nsm_model()
+    #     if self.user_id:
+    #         self.update_user()
+    #         self.update_user_permissions()
+    #     self.reset_employee_emails_cache()
 
     def update_user_permissions(self):
         if not self.create_user_permission:
