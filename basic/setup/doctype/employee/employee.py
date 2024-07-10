@@ -79,12 +79,12 @@ class Employee(NestedSet):
     def update_nsm_model(self):
         frappe.utils.nestedset.update_nsm(self)
 
-    # def on_update(self):
-    #     self.update_nsm_model()
-    #     if self.user_id:
-    #         self.update_user()
-    #         self.update_user_permissions()
-    #     self.reset_employee_emails_cache()
+    def on_update(self):
+        self.update_nsm_model()
+        if self.user_id:
+            # self.update_user()
+            self.update_user_permissions()
+        self.reset_employee_emails_cache()
 
     def update_user_permissions(self):
         if not self.create_user_permission:
@@ -276,10 +276,10 @@ def validate_employee_role(doc, method=None, ignore_emp_check=False):
 def update_user_permissions(doc, method):
     # called via User hook
     if "Employee" in [d.role for d in doc.get("roles")]:
-        if not has_permission("User Permission", ptype="write", raise_exception=False):
-            return
+        # if not has_permission("User Permission", ptype="write", raise_exception=False):
+        #     return
         employee = frappe.get_doc("Employee", {"user_id": doc.name})
-        employee.update_user_permissions()
+        # employee.update_user_permissions()
 
 
 def get_employee_email(employee_doc):
